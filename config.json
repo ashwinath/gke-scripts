@@ -1,0 +1,10 @@
+{
+   "clusters": [
+      {
+         "name": "name-of-cluster",
+         "location": "asia-southeast1",
+         "project": "name-of-project",
+         "helm": "helm-binary-here"
+      }
+   ]
+}

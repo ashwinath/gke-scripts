@@ -1,0 +1,7 @@
+#!/bin/bash
+cat config.json | jq -rc ".clusters[]" | while read LINE; do
+    name=$(echo ${LINE} | jq -r ".name")
+    helm_bin_name=$(echo ${LINE} | jq -r ".helm")
+    kubectl config use-context ${name}
+    ${helm_bin_name} ls | grep -vi name | grep $1
+done

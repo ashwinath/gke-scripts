@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+cat config.json | jq -rc ".clusters[]" | while read LINE; do
+    name=$(echo ${LINE} | jq -r ".name")
+    location=$(echo ${LINE} | jq -r ".location")
+    project=$(echo ${LINE} | jq -r ".project")
+    gcloud --project ${project} container clusters get-credentials --region ${location} ${name}
+    CLUSTER_NAME=$(kubectl config view -o json | jq '.contexts[] | select(.name=="'$(kubectl config current-context)'")' | jq -r .context.cluster)
+    USER=$(kubectl config view -o json | jq '.contexts[] | select(.name=="'$(kubectl config current-context)'")' | jq -r .context.user)
+    kubectl config set-context $name --namespace=default --cluster=$CLUSTER_NAME --user=$USER
+done
